@@ -1,0 +1,24 @@
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String  @id @default(cuid())
+  firstName   String
+  lastName    String?
+  email       String  @unique
+  clerkUserId String  @unique
+  imageUrl    String?
+
+  createAt DateTime @default(now()) //Define que dia o usuário foi criado
+  updateAt DateTime @updatedAt //Toda vez que a gente atualizar alguma informação do usuário ele atualizará automaticamente.
+
+  @@map("users")
+}

@@ -1,6 +1,9 @@
 import { Button } from "@/components/ui/button";
+import { prisma } from "@/lib/prisma";
 
-export default function Home() {
+export default async function Home() {
+  const users = await prisma.user.findMany();
+  console.log(users)
   return (
     <div>
       <h1>Codelab</h1>
