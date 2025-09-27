@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated/prisma"
@@ -21,4 +20,90 @@ model User {
   updateAt DateTime @updatedAt //Toda vez que a gente atualizar alguma informação do usuário ele atualizará automaticamente.
 
   @@map("users")
+}
+
+//modelagem das Tags do curso
+model CourseTag {
+  id   String @id @default(cuid())
+  name String @unique
+
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+  course   Course?  @relation(fields: [courseId], references: [id]) //Relação entre a tabela de cursos e a tabela de tags
+  courseId String?
+
+  @@map("courses_tag")
+}
+
+//Status do curso
+enum CourseStatus {
+  DRAFT
+  PUBLISHED
+}
+
+//Dificuldade do curso
+enum CourseDifficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+//Cursos
+model Course {
+  id String @id @default(cuid())
+
+  status CourseStatus @default(DRAFT)
+
+  title            String
+  slug             String           @unique
+  description      String
+  shortDescription String?
+  thumbnail        String
+  price            Float
+  discountPrice    Float?
+  tags             CourseTag[]
+  difficulty       CourseDifficulty @default(EASY)
+
+  createAt DateTime       @default(now())
+  updateAt DateTime       @updatedAt
+  modules  CourseModule[]
+
+  @@map("courses")
+}
+
+model CourseModule {
+  id String @id @default(cuid())
+
+  title       String
+  description String
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  order Int
+
+  createAt DateTime       @default(now())
+  updateAt DateTime       @updatedAt
+  lessons  CourseLesson[]
+
+  @@map("course_modules")
+}
+
+model CourseLesson {
+  id String @id @default(cuid())
+
+  title        String
+  description  String
+  videoId      String
+  durationInMs Int
+
+  order Int
+
+  moduleId String
+  module   CourseModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  createAt DateTime       @default(now())
+  updateAt DateTime       @updatedAt
+
+  @@map("course_lessons")
 }
