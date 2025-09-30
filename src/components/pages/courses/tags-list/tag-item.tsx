@@ -14,12 +14,14 @@ export const TagItem = ({ tag }: TagItemProps) => {
     const router = useRouter()
     const searchParams = useSearchParams(); //pega a url
     const currentIds = searchParams.getAll("tags"); //pega o Id da taga selecionada
+    const currentQuery = searchParams.get("query");
     const isSelected = currentIds.includes(tag.id); //junta o Id da tag com a URL.
 
     const onSelect = () => {
         const url = qs.stringifyUrl({
             url: pathName,
             query: {
+                query: currentQuery,
                 tags: isSelected ? currentIds.filter((id) => id !== tag.id) : [...currentIds, tag.id] //Caso a tag já esteja selecionado na URL ele retira, se não ele adiciona na URL.
             },
         },{
