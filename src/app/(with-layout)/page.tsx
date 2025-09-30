@@ -1,13 +1,9 @@
-import { Button } from "@/components/ui/button";
-import { prisma } from "@/lib/prisma";
+import { CourseTagsList } from "@/components/pages/courses/tags-list";
 
 export default async function Home() {
-  const users = await prisma.user.findMany();
-  console.log(users)
   return (
     <div>
-      <h1>Codelab</h1>
-      <Button>Teste shadcn/ui</Button>
+      <CourseTagsList></CourseTagsList>
     </div>
   );
 }
