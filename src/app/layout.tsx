@@ -10,7 +10,7 @@ const nunito = Nunito({
   variable: "--font-sans",
   subsets: ["latin"],
 });
-''
+
 export const metadata: Metadata = {
   title: "Codelab",
 };

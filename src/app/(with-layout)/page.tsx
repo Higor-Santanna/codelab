@@ -1,5 +1,7 @@
 import { CoursesList } from "@/components/pages/courses/courses-list";
 import { CourseTagsList } from "@/components/pages/courses/tags-list";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Suspense } from "react";
 
 type CourseTagProps = {
   searchParams: Promise<{
@@ -10,11 +12,19 @@ type CourseTagProps = {
 
 export default async function CoursesPage({searchParams}: CourseTagProps) {
   const { query, tags } = await searchParams;
-  console.log(query, tags)
+  const suspenseKey = JSON.stringify({query, tags});
+
   return (
     <div>
-      <CourseTagsList></CourseTagsList>
-      <CoursesList query={query} tags={tags}/>
+      <Suspense key={`tags-${suspenseKey}`}
+      fallback={<Skeleton className="w-full h-[22px] min-h-[22px]"/>}
+      >
+          <CourseTagsList />
+      </Suspense>
+
+      <Suspense key={suspenseKey} fallback={<Skeleton className="flex-1" />}>
+          <CoursesList query={query} tags={tags}/>
+      </Suspense>
     </div>
   );
 }
