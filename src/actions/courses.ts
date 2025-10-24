@@ -38,3 +38,33 @@ export const getCourses = async ({query, tags: rawTags}: GetCousersPayload) => {
 
     return cousers;
 };
+
+//Na função abaixo iremos buscar cursos ou por slug ou por ID.
+export const getCourse = async (
+    query: string,
+    queryType: "slug" | "id" = "slug" 
+) => {
+    const course = await prisma.course.findUnique({
+        where: {
+            slug: queryType === "slug" ? query : undefined,
+            id: queryType === "id" ? query : undefined,
+        },
+        include: {
+            modules: {
+                include: {
+                    lessons: {
+                        orderBy: {
+                            order: "asc", //aqui eu orderno as lições por ordem crescente
+                        },
+                    },
+                },
+                orderBy: {
+                    order: "asc" //aqui eu ordeno os módulos por ordem crescente
+                },
+            },
+            tags: true, //incluo as tags
+        },
+    });
+
+    return { course }
+}
