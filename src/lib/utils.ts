@@ -30,4 +30,11 @@ export  const formatDifficulty = (difficulty: CourseDifficulty) => {
     case CourseDifficulty.HARD:
       return "Avançado";
   }
-}
+};
+
+export const formatPrice = (price: number) => {
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(price);
+};
