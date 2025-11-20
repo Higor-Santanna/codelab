@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  provider        = "prisma-client-js"
+  output          = "../src/generated/prisma"
   previewFeatures = ["fullTextSearchPostgres"]
 }
 
@@ -19,6 +19,8 @@ model User {
 
   createAt DateTime @default(now()) //Define que dia o usuário foi criado
   updateAt DateTime @updatedAt //Toda vez que a gente atualizar alguma informação do usuário ele atualizará automaticamente.
+
+  completedLessons CompletedLesson[]
 
   @@map("users")
 }
@@ -65,9 +67,10 @@ model Course {
   tags             CourseTag[]
   difficulty       CourseDifficulty @default(EASY)
 
-  createAt DateTime       @default(now())
-  updateAt DateTime       @updatedAt
-  modules  CourseModule[]
+  createAt         DateTime          @default(now())
+  updateAt         DateTime          @updatedAt
+  modules          CourseModule[]
+  completedLessons CompletedLesson[]
 
   @@map("courses")
 }
@@ -103,8 +106,28 @@ model CourseLesson {
   moduleId String
   module   CourseModule @relation(fields: [moduleId], references: [id], onDelete: Cascade)
 
-  createAt DateTime       @default(now())
-  updateAt DateTime       @updatedAt
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+
+  completedLessons CompletedLesson[]
 
   @@map("course_lessons")
+}
+
+model CompletedLesson {
+  id String @id @default(cuid())
+
+  lessonId String
+  lesson   CourseLesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("completed_lessons")
 }
